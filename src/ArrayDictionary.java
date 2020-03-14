@@ -37,19 +37,19 @@ public class ArrayDictionary implements Dictionary {
         }
 
         KVEntry ptr = entries[hashedKey];
-        KVEntry pNewNode = null;
+        KVEntry NewNode = null;
         while (ptr != null) {
             // update value if key already exists
             if (ptr.key == key) {
                 ptr.value = value;
                 return true;
             }
-            pNewNode = ptr;
+            NewNode = ptr;
             ptr = ptr.next;
         }
 
         // add an entry to the end of the chain
-        pNewNode.next = new KVEntry(key, value);
+        NewNode.next = new KVEntry(key, value);
         return true;
     }
 
@@ -57,7 +57,27 @@ public class ArrayDictionary implements Dictionary {
     // Return true if an entry is deleted, false otherwise
     @Override
     public boolean remove(int key) {
-        // homework
+        int hashedKey = hashFunction(key);
+
+        // entry DNE
+        if (entries[hashedKey] == null) return false;
+
+        KVEntry ptr = entries[hashedKey];
+
+        if (ptr.key == key) {
+            entries[hashedKey] = ptr.next;
+            return true;
+        }
+
+        while (ptr.next != null) {
+            // remove entry if key matches
+            if (ptr.next.key == key) {
+                ptr = ptr.next.next;
+                count--;
+                return true;
+            }
+            ptr = ptr.next;
+        }
         return false;
     }
 
@@ -65,7 +85,22 @@ public class ArrayDictionary implements Dictionary {
     // with the key
     @Override
     public boolean contains(int key) {
-        // homework
+        if (key < 0)return false;
+
+        int hashedKey = hashFunction(key);
+
+        // entry DNE
+        if (entries[hashedKey] == null) return false;
+
+        KVEntry ptr = entries[hashedKey];
+
+        while (ptr != null) {
+            // entry that matches key
+            if (ptr.key == key) {
+                return true;
+            }
+            ptr = ptr.next;
+        }
         return false;
     }
 
